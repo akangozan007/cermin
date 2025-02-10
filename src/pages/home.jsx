@@ -9,7 +9,8 @@ function Home({ powerON, substanceTop, substanceBottom }) {
   const [laserPos, setLaserPos] = useState({ x: 0, y: 0 });
   const [batasAtas, setBatasAtas] = useState({ x: 0, y: 0 });
   const [batasBawah, setBatasBawah] = useState({ x: 0, y: 0 });
-  const [laserColor, setLaserColor] = useState("red"); // Warna laser dinamis
+  const [laserAngle, setLaserAngle] = useState(0);
+  const [laserColor, setLaserColor] = useState("red");
 
   const cameraRef = useRef(null);
   const laserRef = useRef(null);
@@ -23,10 +24,10 @@ function Home({ powerON, substanceTop, substanceBottom }) {
         const centerX = rect.left + rect.width / 2;
         const centerY = rect.top + rect.height / 2;
 
-        setKursor({
-          x: event.clientX - centerX,
-          y: event.clientY - centerY,
-        });
+        const x = event.clientX - centerX;
+        const y = event.clientY - centerY;
+        setKursor({ x, y });
+        setLaserAngle(Math.atan2(y, x) * (180 / Math.PI));
       }
     };
 
@@ -45,18 +46,16 @@ function Home({ powerON, substanceTop, substanceBottom }) {
 
     updateLaserPosition();
     return () => cancelAnimationFrame(updateLaserPosition);
-  }, [kursor.x, kursor.y]);
+  }, []);
 
   useEffect(() => {
     const updateBatasan = () => {
       if (atasRef.current && bawahRef.current) {
         const atasRect = atasRef.current.getBoundingClientRect();
         const bawahRect = bawahRef.current.getBoundingClientRect();
-
         setBatasAtas({ x: atasRect.left, y: atasRect.bottom });
         setBatasBawah({ x: bawahRect.left, y: bawahRect.top });
       }
-
       requestAnimationFrame(updateBatasan);
     };
 
@@ -65,26 +64,15 @@ function Home({ powerON, substanceTop, substanceBottom }) {
   }, []);
 
   useEffect(() => {
-    if (laserPos.y > batasBawah.y) {
-      setLaserColor("blue"); // Laser berubah biru jika melewati batas bawah
-    } else {
-      setLaserColor("red"); // Kembali ke merah jika masih di atas batas bawah
+    if (laserPos.y <= batasAtas.y || laserPos.y >= batasBawah.y) {
+      setLaserAngle((prevAngle) => 180 - prevAngle);
     }
-  }, [laserPos, batasBawah]);
-
-  const angle = Math.atan2(kursor.y, kursor.x) * (180 / Math.PI);
+  }, [laserPos, batasAtas, batasBawah]);
 
   return (
     <div className="cover-container d-flex py-3 mx-auto flex-column">
-      <div
-        className="p-5 text-center rounded-3 h-100 flex-column"
-        style={{
-          height: "100vh",
-          width: "100vw",
-          overflow: "hidden",
-          position: "relative",
-        }}
-      >
+      <div className="p-5 text-center rounded-3 h-100 flex-column" style={{ height: "100vh", width: "100vw", overflow: "hidden", position: "relative" }}>
+
         {/* Substance Top */}
         <div ref={atasRef}>
           {substanceTop === "Oil" ? <OilUp /> : substanceTop === "Water" ? <WaterUp /> : null}
@@ -96,7 +84,7 @@ function Home({ powerON, substanceTop, substanceBottom }) {
             <VideocamIcon
               style={{
                 fontSize: 90,
-                transform: `rotate(${angle}deg)`,
+                transform: `rotate(${laserAngle}deg)`,
                 transition: "transform 0.1s ease-out",
                 transformOrigin: "center",
               }}
@@ -111,8 +99,8 @@ function Home({ powerON, substanceTop, substanceBottom }) {
                 left: "50%",
                 width: "80vw",
                 height: "4px",
-                backgroundColor: laserColor, // Warna laser berubah dinamis
-                transform: `rotate(${angle}deg) translateX(30px)`,
+                backgroundColor: laserColor,
+                transform: `rotate(${laserAngle}deg) translateX(30px)`,
                 transformOrigin: "left",
                 transition: "transform 0.1s ease-out, background-color 0.2s ease-in-out",
                 display: powerON === "on" ? "block" : "none",
@@ -123,22 +111,6 @@ function Home({ powerON, substanceTop, substanceBottom }) {
           <div className="text-start m-5">ini laser</div>
         </div>
 
-        {/* Titik Koordinat Laser */}
-        <div
-          id="laserDot"
-          style={{
-            position: "absolute",
-            top: `${laserPos.y}px`,
-            left: `${laserPos.x}px`,
-            width: "10px",
-            height: "10px",
-            backgroundColor: "yellow",
-            borderRadius: "50%",
-            transform: "translate(-50%, -50%)",
-            zIndex: 2,
-          }}
-        ></div>
-
         <div className="position-relative" id="batasatasbawah" style={{ zIndex: 1 }}>
           <div className="position-absolute top-0 end-0">
             <p className="h3">Jarak X: {kursor.x}</p>
@@ -148,12 +120,8 @@ function Home({ powerON, substanceTop, substanceBottom }) {
             <p className="h3">Status Substance Bawah: {substanceBottom}</p>
             <p className="h3">Posisi Laser X: {Math.round(laserPos.x)}</p>
             <p className="h3">Posisi Laser Y: {Math.round(laserPos.y)}</p>
-            <p className="h3">
-              Batas substansi Atas: di titik X: {Math.round(batasAtas.x)}, Y: {Math.round(batasAtas.y)}
-            </p>
-            <p className="h3">
-              Batas substansi Bawah: di titik X: {Math.round(batasBawah.x)}, Y: {Math.round(batasBawah.y)}
-            </p>
+            <p className="h3">Batas substansi Atas: di titik X: {Math.round(batasAtas.x)}, Y: {Math.round(batasAtas.y)}</p>
+            <p className="h3">Batas substansi Bawah: di titik X: {Math.round(batasBawah.x)}, Y: {Math.round(batasBawah.y)}</p>
           </div>
         </div>
 
