@@ -3,38 +3,39 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
 export function WaterUp() {
-  console.log("waterUp");
   return (
-    <>
-      <div className="container-fluid bg-info" style={{ position: "absolute", height:"55%", zIndex:"-1", width:"100%" }}>water atas</div>
-    </>
+    <div className="position-absolute top-0 start-0 bg-info" 
+         style={{ height: "50%", width: "100%", zIndex: "-1" }}>
+      Water Atas
+    </div>
   );
 }
 
 export function WaterDown() {
-  console.log("waterDown");
   return (
-    <>
-      <div className="container-fluid bg-info" style={{ position: "absolute", height:"55%", zIndex:"-1", width:"100%" }}>water bawah</div>
-    </>
+    <div className="position-absolute bottom-0 start-0 bg-info" 
+         style={{ height: "50%", width: "100%", zIndex: "-1" }}>
+      Water Bawah
+    </div>
   );
- 
 }
 
+
 export function OilUp() {
-  console.log("oilUp");
   return (
-    <>
-      <div className="container-fluid bg-warning" style={{ position: "absolute", height:"55%", zIndex:"-1", width:"100%" }}>minyak atas</div>
-    </>
+    <div className="position-absolute top-0 start-0 bg-warning"
+         style={{ height: "50%", width: "100%", zIndex: "-1" }}>
+      Minyak Atas
+    </div>
   );
 }
 
 export function OilDown() {
-  console.log("oilDown");
   return (
-    <>
-      <div className="container-fluid bg-warning" style={{ position: "absolute", height:"55%", zIndex:"-1", width:"100%" }}>minyak bawah</div>
-    </>
+    <div className="position-absolute bottom-0 start-0 bg-warning"
+         style={{ height: "50%", width: "100%", zIndex: "-1" }}>
+      Minyak Bawah
+    </div>
   );
 }
+
