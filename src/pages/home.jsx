@@ -5,7 +5,6 @@ import VideocamIcon from '@mui/icons-material/Videocam';
 
 function Home({ powerON }) {
   const [kursor, setKursor] = useState({ x: 0, y: 0 });
-  const [displayLaser, setStatusLaser] = useState(null);
   const cameraRef = useRef(null);
 
   useEffect(() => {
@@ -24,15 +23,11 @@ function Home({ powerON }) {
 
     window.addEventListener("mousemove", handleMouseMove);
     return () => window.removeEventListener("mousemove", handleMouseMove);
-  }, [setKursor]);
+  }, []);
 
-  // Menghitung sudut rotasi
+  // Menghitung sudut rotasi kamera mengikuti kursor
   const angle = Math.atan2(kursor.y, kursor.x) * (180 / Math.PI);
-  if({powerON} = "off"){
-    displayLaser = "none";
-  }else{
-    displayLaser = "block";
-  }
+
   return (
     <>
       <div className="cover-container d-flex bg-body-tertiary py-3 mx-auto flex-column">
@@ -60,7 +55,7 @@ function Home({ powerON }) {
                   transform: `rotate(${angle}deg) translateX(30px)`, 
                   transformOrigin: "left",
                   transition: "transform 0.1s ease-out",
-                  display: displayLaser ? "none" : "block",
+                  display: powerON === "on" ? "block" : "none", // Sesuaikan dengan powerON
                 }}
               />
             </div>
@@ -71,7 +66,7 @@ function Home({ powerON }) {
           <div className="container-fluid" id="batasatasbawah">
             <p className='h3'>Jarak X: {kursor.x}</p>
             <p className='h3'>Jarak Y: {kursor.y}</p>
-            <p className='h3'>Status Laser: {powerON}</p>
+            <p id="StatusLaser" className='h3'>Status Laser: {powerON}</p>
           </div>
         </div>
       </div>
