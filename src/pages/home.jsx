@@ -1,12 +1,14 @@
-import React, { useEffect, useRef, useState } from 'react';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import VideocamIcon from '@mui/icons-material/Videocam';
-import { WaterUp, WaterDown, OilUp, OilDown } from './substance';  // Pastikan huruf kapital
+import React, { useEffect, useRef, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import VideocamIcon from "@mui/icons-material/Videocam";
+import { WaterUp, WaterDown, OilUp, OilDown } from "./substance"; // Pastikan huruf kapital
 
 function Home({ powerON, substanceTop, substanceBottom }) {
   const [kursor, setKursor] = useState({ x: 0, y: 0 });
+  const [laserPos, setLaserPos] = useState({ x: 0, y: 0 });
   const cameraRef = useRef(null);
+  const laserRef = useRef(null); // Ref untuk posisi laser
 
   useEffect(() => {
     const handleMouseMove = (event) => {
@@ -26,15 +28,26 @@ function Home({ powerON, substanceTop, substanceBottom }) {
     return () => window.removeEventListener("mousemove", handleMouseMove);
   }, []);
 
+  useEffect(() => {
+    // Update posisi laser setelah render
+    if (laserRef.current) {
+      const laserRect = laserRef.current.getBoundingClientRect();
+      setLaserPos({ x: laserRect.left, y: laserRect.top });
+    }
+  }, [powerON]); // Jalankan setiap kali laser berubah
+
   // Menghitung sudut rotasi kamera mengikuti kursor
   const angle = Math.atan2(kursor.y, kursor.x) * (180 / Math.PI);
 
   return (
     <>
-      <div className="cover-container d-flex bg-body-tertiary py-3 mx-auto flex-column">
-        <div className="p-5 text-center rounded-3 h-100 flex-column" style={{ height: "100vh", position: "relative" }}>
+      <div className="cover-container d-flex py-3 mx-auto flex-column">
+        <div
+          className="p-5 text-center rounded-3 h-100 flex-column"
+          style={{ height: "100%", position: "relative" }}
+        >
           {/* Substance Top */}
-          {substanceTop === "Oil" ? <OilUp className="container-fluid"/> : substanceTop === "Water" ? <WaterUp /> : null}
+          {substanceTop === "Oil" ? <OilUp className="container-fluid" /> : substanceTop === "Water" ? <WaterUp /> : null}
 
           <div className="p-5 text-center rounded-3 w-100 d-flex" style={{ position: "relative" }}>
             {/* CCTV Camera */}
@@ -49,6 +62,8 @@ function Home({ powerON, substanceTop, substanceBottom }) {
               />
               {/* Laser */}
               <div
+                id="posisiLaser"
+                ref={laserRef}
                 style={{
                   position: "absolute",
                   top: "50%",
@@ -63,15 +78,17 @@ function Home({ powerON, substanceTop, substanceBottom }) {
                 }}
               />
             </div>
-            <div className='text-start m-5'>ini laser</div>
+            <div className="text-start m-5">ini laser</div>
           </div>
 
-          <div className="container-fluid" id="batasatasbawah">
-            <p className='h3'>Jarak X: {kursor.x}</p>
-            <p className='h3'>Jarak Y: {kursor.y}</p>
-            <p id="StatusLaser" className='h3'>Status Laser: {powerON}</p>
-            <p className='h3'>Status Substance Atas: {substanceTop}</p>
-            <p className='h3'>Status Substance Bawah: {substanceBottom}</p>
+          <div className="container-fluid" id="batasatasbawah" style={{ zIndex: 1 }}>
+            <p className="h3">Jarak X: {kursor.x}</p>
+            <p className="h3">Jarak Y: {kursor.y}</p>
+            <p id="StatusLaser" className="h3">Status Laser: {powerON}</p>
+            <p className="h3">Status Substance Atas: {substanceTop}</p>
+            <p className="h3">Status Substance Bawah: {substanceBottom}</p>
+            <p className="h3">Posisi Laser X: {laserPos.x}</p>
+            <p className="h3">Posisi Laser Y: {laserPos.y}</p>
           </div>
 
           {/* Substance Bottom */}
