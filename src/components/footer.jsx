@@ -1,6 +1,39 @@
-import React from 'react';
+import React, {useState} from 'react';
 
-function Footer() {
+
+
+function Footer({Substance, setSubstance}) {
+const [Substance, setSubstance] = useState("off");
+
+  const HandleWaterUp = () => {
+    setSubstance((WaterUpDisplay) =>
+      WaterUpDisplay === true ? "up" : "off"
+    );
+    
+  };
+  const HandleWaterDown = () => {
+    setSubstance((WaterDownDisplay) =>
+      WaterDownDisplay === true ? "up" : "on"
+    );
+    
+  };
+
+  const HandleOilUp = () => {
+    setSubstance((OilUpDisplay) =>
+      OilUpDisplay === true ? "up" : "off"
+    );
+    
+  };
+
+  const HandleOilDown = () => {
+    setSubstance((OilDownDisplay) =>
+      OilDownDisplay === true ? "up" : "off"
+    );
+    
+  };
+
+
+
   return (
 <footer className='bg-dark'>
     <div className="card text-center bg-dark">
@@ -13,8 +46,8 @@ function Footer() {
             <div className='container  d-inline-flex gap-3 p-4 flex-wrap'>
                 <button className='btn btn-outline-light'>Vacuum<br/>n=1.0</button>
                 <button className='btn btn-outline-light'>Air <br/>n=1.003</button>
-                <button className='btn btn-primary'>Water<br/>n=1.33</button>
-                <button className='btn btn-warning'>Oil<br/>n=1.47</button>
+                <button className='btn btn-primary' onClick={HandleWaterUp}>Water<br/>n=1.33</button>
+                <button className='btn btn-warning' onClick={HandleOilUp}>Oil<br/>n=1.47</button>
             </div>
         </div>
         <div className="card-body col-6">
@@ -22,8 +55,8 @@ function Footer() {
             <div className='container  d-inline-flex gap-3 p-4 flex-wrap'>
                 <button className='btn btn-outline-light'>Vacuum<br/>n=1.0</button>
                 <button className='btn btn-outline-light'>Air <br/>n=1.003</button>
-                <button className='btn btn-primary'>Water<br/>n=1.33</button>
-                <button className='btn btn-warning'>Oil<br/>n=1.47</button>
+                <button className='btn btn-primary' onClick={HandleWaterDown}>Water<br/>n=1.33</button>
+                <button className='btn btn-warning' onClick={HandleOilDown}>Oil<br/>n=1.47</button>
             </div>
         </div>
     </div>

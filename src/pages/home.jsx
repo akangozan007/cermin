@@ -2,8 +2,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import VideocamIcon from '@mui/icons-material/Videocam';
+import { waterUp, waterDown, oilUp, oilDown } from './substance';
 
-function Home({ powerON }) {
+
+function Home({ powerON, Substance }) {
   const [kursor, setKursor] = useState({ x: 0, y: 0 });
   const cameraRef = useRef(null);
 
@@ -67,6 +69,7 @@ function Home({ powerON }) {
             <p className='h3'>Jarak X: {kursor.x}</p>
             <p className='h3'>Jarak Y: {kursor.y}</p>
             <p id="StatusLaser" className='h3'>Status Laser: {powerON}</p>
+            <p className='h3'>Status Substance: {Substance}</p>
           </div>
         </div>
       </div>
