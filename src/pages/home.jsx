@@ -126,6 +126,23 @@ function Home({ powerON, substanceTop, substanceBottom }) {
         </div>
 
         {/* Substance Bottom */}
+         {/* Laser */}
+         <div
+              id="posisiLaser"
+              style={{
+                position: "absolute",
+                top: "50%",
+                left: "50%",
+                width: "80vw",
+                height: "4px",
+                backgroundColor: laserColor,
+                // transform: `rotate(${laserAngle}deg) translateX(30px)`,
+                transformOrigin: "left",
+                transition: "transform 0.1s ease-out, background-color 0.2s ease-in-out",
+                display: powerON === "on" ? "block" : "none",
+                zIndex: 0,
+              }}
+            />
         <div ref={bawahRef} className="top-50 start-50">
           {substanceBottom === "Oil" ? <OilDown /> : substanceBottom === "Water" ? <WaterDown /> : null}
         </div>
