@@ -9,7 +9,7 @@ function Home({ powerON, substanceTop, substanceBottom }) {
   const [laserPos, setLaserPos] = useState({ x: 0, y: 0 });
   const [batasAtas, setBatasAtas] = useState({ x: 0, y: 0 });
   const [batasBawah, setBatasBawah] = useState({ x: 0, y: 0 });
-  const [laserColor, setLaserColor] = useState("red"); // State untuk warna laser
+  const [laserColor, setLaserColor] = useState("red"); // Warna laser dinamis
 
   const cameraRef = useRef(null);
   const laserRef = useRef(null);
@@ -45,7 +45,7 @@ function Home({ powerON, substanceTop, substanceBottom }) {
 
     updateLaserPosition();
     return () => cancelAnimationFrame(updateLaserPosition);
-  }, []);
+  }, [kursor.x, kursor.y]);
 
   useEffect(() => {
     const updateBatasan = () => {
@@ -64,11 +64,9 @@ function Home({ powerON, substanceTop, substanceBottom }) {
     return () => cancelAnimationFrame(updateBatasan);
   }, []);
 
-  // Perubahan warna laser jika melewati batas substansi bawah
   useEffect(() => {
-    // if (laserPos.y > batasBawah.y) {
-   if (laserPos.y > 50) {
-      setLaserColor("blue"); // Warna laser berubah ke biru jika melewati batas bawah
+    if (laserPos.y > batasBawah.y) {
+      setLaserColor("blue"); // Laser berubah biru jika melewati batas bawah
     } else {
       setLaserColor("red"); // Kembali ke merah jika masih di atas batas bawah
     }
@@ -78,8 +76,15 @@ function Home({ powerON, substanceTop, substanceBottom }) {
 
   return (
     <div className="cover-container d-flex py-3 mx-auto flex-column">
-      <div className="p-5 text-center rounded-3 h-100 flex-column" style={{ height: "100vh", width: "100vw", overflow: "hidden", position: "relative" }}>
-
+      <div
+        className="p-5 text-center rounded-3 h-100 flex-column"
+        style={{
+          height: "100vh",
+          width: "100vw",
+          overflow: "hidden",
+          position: "relative",
+        }}
+      >
         {/* Substance Top */}
         <div ref={atasRef}>
           {substanceTop === "Oil" ? <OilUp /> : substanceTop === "Water" ? <WaterUp /> : null}
@@ -104,7 +109,7 @@ function Home({ powerON, substanceTop, substanceBottom }) {
                 position: "absolute",
                 top: "50%",
                 left: "50%",
-                width: "120vw",
+                width: "80vw",
                 height: "4px",
                 backgroundColor: laserColor, // Warna laser berubah dinamis
                 transform: `rotate(${angle}deg) translateX(30px)`,
@@ -118,6 +123,22 @@ function Home({ powerON, substanceTop, substanceBottom }) {
           <div className="text-start m-5">ini laser</div>
         </div>
 
+        {/* Titik Koordinat Laser */}
+        <div
+          id="laserDot"
+          style={{
+            position: "absolute",
+            top: `${laserPos.y}px`,
+            left: `${laserPos.x}px`,
+            width: "10px",
+            height: "10px",
+            backgroundColor: "yellow",
+            borderRadius: "50%",
+            transform: "translate(-50%, -50%)",
+            zIndex: 2,
+          }}
+        ></div>
+
         <div className="position-relative" id="batasatasbawah" style={{ zIndex: 1 }}>
           <div className="position-absolute top-0 end-0">
             <p className="h3">Jarak X: {kursor.x}</p>
@@ -127,8 +148,12 @@ function Home({ powerON, substanceTop, substanceBottom }) {
             <p className="h3">Status Substance Bawah: {substanceBottom}</p>
             <p className="h3">Posisi Laser X: {Math.round(laserPos.x)}</p>
             <p className="h3">Posisi Laser Y: {Math.round(laserPos.y)}</p>
-            <p className="h3">Batas substansi Atas: di titik X: {Math.round(batasAtas.x)}, Y: {Math.round(batasAtas.y)}</p>
-            <p className="h3">Batas substansi Bawah: di titik X: {Math.round(batasBawah.x)}, Y: {Math.round(batasBawah.y)}</p>
+            <p className="h3">
+              Batas substansi Atas: di titik X: {Math.round(batasAtas.x)}, Y: {Math.round(batasAtas.y)}
+            </p>
+            <p className="h3">
+              Batas substansi Bawah: di titik X: {Math.round(batasBawah.x)}, Y: {Math.round(batasBawah.y)}
+            </p>
           </div>
         </div>
 
